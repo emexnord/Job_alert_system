@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  flask_app:
+    container_name: flask_app
+    image: dockerhub-flask_live_app:1.0.0
+    build: ./job-scraper-service
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@flask_db:5432/jobs_db
+    depends_on:
+      - flask_db
+  flask_db:
+    container_name: flask_db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=jobs_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
