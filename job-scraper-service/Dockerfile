@@ -8,8 +8,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE 5000
 
-# CMD [ "flask", "run", "--host=0.0.0.0", "--port=4000"]
-# CMD ["python3", "scheduler/job_scheduler.py"]
-CMD ["python3", "src/app.py"]
+CMD ["flask", "--app", "src/app.py", "--debug", "run","--host=0.0.0.0", "--port=5000"]

@@ -1,37 +1,46 @@
 from db.repository.company_repository import CompanyRepository
 from sqlalchemy.exc import SQLAlchemyError
+from db.models.company import Company
 
-class CompanyService:
-    @staticmethod
-    def get_all_companies():
-        companies = CompanyRepository.get_all()
-        return [company.as_dict() for company in companies]
+def get_all_companies():
+    repo = CompanyRepository()
+    companies = repo.get_all_companies()
+    return [company.json() for company in companies]
 
-    @staticmethod
-    def get_company_by_id(company_id):
-        company = CompanyRepository.get_by_id(company_id)
-        if company:
-            return company.as_dict()
-        return None
+def get_company_by_id(company_id: str):
+    repo = CompanyRepository()
+    company = repo.get_company_by_id(company_id)
+    if company:
+        return company.json()
+    return None
 
-    @staticmethod
-    def create_company(company_data):
-        try:
-            new_company = CompanyRepository.create(company_data)
-            return new_company.as_dict()
-        except SQLAlchemyError as e:
-            return {'message': str(e)}
+def create_company(name: str, scraping_url: str):
+    repo = CompanyRepository()
+    company = Company(name=name, scraping_url=scraping_url)
+    try:
+        new_company = repo.add_company(company)
+        return new_company.json()
+    except SQLAlchemyError as e:
+        return {'message': str(e)}
 
-    @staticmethod
-    def update_company(company_id, company_data):
-        company = CompanyRepository.update_company(company_id, company_data)
-        if company:
-            return company.as_dict()
-        return None
-
-    @staticmethod
-    def delete_company(company_id):
-        company = CompanyRepository.delete_company(company_id)
-        if company:
-            return {'message': 'Company deleted'}
+def update_company(company_id: str, company_data):
+    repo = CompanyRepository()
+    company = repo.get_company_by_id(company_id)
+    if not company:
         return {'message': 'Company not found'}
+    
+    for key, value in company_data.items():
+        setattr(company, key, value)
+    
+    try:
+        updated_company = repo.update_company(company)
+        return updated_company.json()
+    except SQLAlchemyError as e:
+        return {'message': str(e)}
+
+def delete_company(company_id):
+    repo = CompanyRepository()
+    company = repo.delete_company(company_id)
+    if company:
+        return {'message': 'Company deleted'}
+    return {'message': 'Company not found'}

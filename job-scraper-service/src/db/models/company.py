@@ -1,10 +1,11 @@
 from db.database import db
 from datetime import datetime
+import uuid
 
 class Company(db.Model):
     __tablename__ = "companies"
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = db.Column(db.String(120), unique=True, nullable=False)
     scraping_url = db.Column(db.String(), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
