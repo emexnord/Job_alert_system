@@ -1,28 +1,13 @@
 name: Docker Image CI
 
-on: 
+on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    # services:
-    #   postgres:
-    #     image: postgres:latest
-    #     env:
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_PASSWORD: postgres
-    #       POSTGRES_DB: jobs_db
-    #     ports:
-    #       - 5432:5432
-    #     options: >-
-    #       --health-cmd "pg_isready -U postgres"
-    #       --health-interval 5s
-    #       --health-timeout 5s
-    #       --health-retries 5
 
     steps:
       - name: Checkout Code
@@ -32,11 +17,14 @@ jobs:
         run: docker compose up -d
 
       - name: Wait for Services to Start
-        run: sleep 10  # Give time for services to be ready
+        run: sleep 20 # Give time for services to be ready
+
+      - name: Show Flask App Logs (if crashed)
+        run: docker logs flask_app || true
 
       - name: Run Tests
         run: |
-          docker exec flask_app pytest -vs tests/test_app.py 
-      
+          docker exec flask_app pytest -vs tests/test_app.py
+
       - name: Stop Docker Containers
         run: docker compose down
