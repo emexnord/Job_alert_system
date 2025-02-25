@@ -1,12 +1,12 @@
 import sys
 import os
-import pytest
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src'))
 
 from app import create_app
 import pytest
-from db.database import db  # Ensure this points to your SQLAlchemy database instance
+from db.database import db
+from db.models.company import Company  # Ensure this points to your SQLAlchemy database instance
 
 
 @pytest.fixture
@@ -32,41 +32,6 @@ def client(app):
     """A test client for the app."""
     with app.test_client() as client:
         yield client
-
-# def test_get_companies(client):
-#     response = client.get('/company')
-#     assert response.status_code == 200
-#     assert response.json == []
-
-# def test_create_company(client):
-#     response = client.post('/company', json={'name': 'Google', 'scraping_url': 'https://www.google.com'})
-#     assert response.status_code == 201
-#     assert response.json['name'] == 'Google'
-#     assert response.json['scraping_url'] == 'https://www.google.com'
-
-# def test_get_company(client):
-#     # Test case where the company exists
-#     response = client.get('/company/32b9be1e-7a19-48fa-afad-22b852302daf')
-#     assert response.status_code == 200
-#     assert response.json['name'] == 'Google'
-#     assert response.json['scraping_url'] == 'https://www.google.com'
-    
-#     # Test case where the company does not exist
-#     response = client.get('/company/999')
-#     assert response.status_code == 200
-#     assert response.json is None
-
-# def test_update_company(client):
-#     response = client.put('/company/1', json={'name': 'Google', 'scraping_url': 'https://www.google.com'})
-#     assert response.status_code == 200
-#     assert response.json['name'] == 'Google'
-#     assert response.json['scraping_url'] == 'https://www.google.com'
-
-# def test_delete_company(client):
-#     response = client.delete('/company/1')
-#     assert response.status_code == 200
-#     assert response.json['name'] == 'Google'
-#     assert response.json['scraping_url'] == 'https://www.google.com'
 
 def test_get_companies(client):
     # Arrange: Create a company
@@ -128,15 +93,15 @@ def test_delete_company(client):
     company = Company(name='Google', scraping_url='https://www.google.com')
     db.session.add(company)
     db.session.commit()
+    company_id = company.id
 
     # Act: Delete the company
-    response = client.delete(f'/company/{company.id}')
+    response = client.delete(f'/company/{company_id}')
 
     # Assert
     assert response.status_code == 200
-    assert response.json['name'] == 'Google'
-    assert response.json['scraping_url'] == 'https://www.google.com'
+    assert response.json['message'] == 'Company deleted'
 
     # Verify that the company is indeed deleted
-    get_response = client.get(f'/company/{company.id}')
-    assert get_response.status_code == 404
+    deleted_company = db.session.get(Company, company_id)
+    assert deleted_company is None

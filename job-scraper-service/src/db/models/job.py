@@ -12,5 +12,6 @@ class JobPosting(db.Model):
     url = db.Column(db.String(), unique=True, nullable=False)
     posted_at = db.Column(db.DateTime, default=datetime.utcnow)
     deadline = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     company = db.relationship("Company", backref=db.backref("job_postings", lazy=True))

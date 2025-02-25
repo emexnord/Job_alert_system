@@ -6,7 +6,7 @@ class CompanyRepository:
         self.db_session = db.session()
 
     def get_company_by_id(self, company_id: str) -> Company:
-        return self.db_session.query(Company).filter(Company.id == company_id).first()
+        return self.db_session.get(Company, company_id)
 
     def get_all_companies(self) -> list[Company]:
         return self.db_session.query(Company).all()
