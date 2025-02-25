@@ -17,10 +17,7 @@ jobs:
         run: docker compose up -d
 
       - name: Wait for Services to Start
-        run: sleep 20 # Give time for services to be ready
-
-      - name: Show Flask App Logs (if crashed)
-        run: docker logs flask_app || true
+        run: sleep 10 # Give time for services to be ready
 
       - name: Run Tests
         run: |

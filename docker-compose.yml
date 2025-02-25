@@ -10,7 +10,9 @@ services:
     environment:
       - DB_URL=postgresql://postgres:postgres@flask_db:5432/jobs_db
     depends_on:
-      - flask_db
+      flask_db:
+        condition: service_healthy
+
   flask_db:
     container_name: flask_db
     image: postgres:latest
@@ -22,6 +24,11 @@ services:
       - POSTGRES_DB=jobs_db
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata: {}
