@@ -1,0 +1,8 @@
+{
+  "notebook.defaultFormatter": "esbenp.prettier-vscode",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#203033",
+    "titleBar.activeBackground": "#203033",
+    "titleBar.activeForeground": "#FDF9F4"
+  }
+}

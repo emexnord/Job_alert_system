@@ -1,44 +1,34 @@
-from sqlalchemy.orm import Session
 from db.database import db
 from db.models.job import JobPosting
 
 class JobRepository:
-    @staticmethod
-    def get_all_jobs():
-        with Session(db) as session:
-            return session.query(JobPosting).all()
+    def __init__(self):
+        self.db_session = db.session()
 
     @staticmethod
-    def get_job_by_id(job_id: int):
-        with Session(db) as session:
-            return session.query(JobPosting).filter(JobPosting.id == job_id).first()
+    def get_all_jobs(self):
+        return self.db_session.query(JobPosting).all()
 
-    @staticmethod
-    def create_job(job: JobPosting):
-        with Session(db) as session:
-            session.add(job)
-            session.commit()
-            session.refresh(job)
-            return job
+    def get_job_by_id(self, job_id: int):
+        return self.db_session.get(JobPosting, job_id)
 
-    @staticmethod
-    def update_job(job_id: int, updated_job: JobPosting):
-        with Session(db) as session:
-            job = session.query(JobPosting).filter(JobPosting.id == job_id).first()
-            if job:
-                job.title = updated_job.title
-                job.description = updated_job.description
-                job.company = updated_job.company
-                job.location = updated_job.location
-                session.commit()
-                session.refresh(job)
-            return job
+    def create_job(self, job: JobPosting):
+        self.db_session.add(job)
+        self.db_session.commit()
+        self.db_session.refresh(job)
+        return job
 
-    @staticmethod
-    def delete_job(job_id: int):
-        with Session(db) as session:
-            job = session.query(JobPosting).filter(JobPosting.id == job_id).first()
-            if job:
-                session.delete(job)
-                session.commit()
-            return job
+    def update_job(self, job_id: int, updated_job: JobPosting):
+        job = self.db_session.get(JobPosting, job_id)
+        if job:
+            self.db_session.merge(updated_job)
+            self.db_session.commit()
+            self.db_session.refresh(job)
+        return job
+
+    def delete_job(self, job_id: int):
+        job = self.db_session.get(JobPosting, job_id)
+        if job:
+            self.db_session.delete(job)
+            self.db_session.commit()
+        return job

@@ -14,9 +14,9 @@ def get_company_by_id(company_id: str):
         return company.json()
     return None
 
-def create_company(name: str, scraping_url: str):
+def create_company(name: str, scraping_url: str, scraping_class_name: str):
     repo = CompanyRepository()
-    company = Company(name=name, scraping_url=scraping_url)
+    company = Company(name=name, scraping_url=scraping_url, scraping_class_name=scraping_class_name)
     try:
         new_company = repo.add_company(company)
         return new_company.json()

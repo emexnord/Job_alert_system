@@ -1,10 +1,5 @@
 {
   "python.defaultInterpreterPath": "venv/bin/python",
-  "workbench.colorCustomizations": {
-    "activityBar.background": "#203033",
-    "titleBar.activeBackground": "#203033",
-    "titleBar.activeForeground": "#FDF9F4"
-  },
   "python.testing.pytestArgs": ["tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true
