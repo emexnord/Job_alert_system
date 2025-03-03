@@ -18,10 +18,10 @@ def scrape_all():
 
             if html:
                 jobs = scraper.parse_jobs(html)
-                created_count = scraper.save_jobs(jobs)
                 scraper.stream_jobs_data(jobs)
+                # created_count = scraper.save_jobs(jobs)
                 successful_scrapes.append(company["name"])
-                print(f"Scraped {created_count} jobs from {company['name']}")
+                print(f"Scraped {len(jobs)} jobs from {company['name']}")
             else:
                 failed_scrapes.append(company["name"])
         except Exception as e:

@@ -1,7 +1,7 @@
 import requests
 from db.models.job import JobPosting
 from db.database import db
-from kafka_producer.producer import stream_jobs_data
+from kafka_producer import producer
 
 
 class BaseScraper:
@@ -23,7 +23,7 @@ class BaseScraper:
         raise NotImplementedError
 
     def stream_jobs_data(self, jobs):
-        stream_jobs_data(jobs)
+        producer.stream_jobs_data(jobs)
 
     def save_jobs(self, job_data):
         created_count = 0

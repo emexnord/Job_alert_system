@@ -20,9 +20,8 @@ def delivery_callback(err, msg):
         print("ERROR: Message failed delivery: {}".format(err))
     else:
         print(
-            "Produced event to topic {topic}: key = {key:12} partition={partition} value = {value:12}".format(
+            "Produced event to topic {topic}: key = {key:12}value = {value:12}".format(
                 topic=msg.topic(),
-                partition=msg.partition(),
                 key=msg.key().decode("utf-8"),
                 value=msg.value().decode("utf-8"),
             )
@@ -39,23 +38,24 @@ def stream_jobs_data(jobs: List[JobPosting]):
 
     # Produce data by selecting random values from these lists.
     topic = environ.get("jobs_stream", "flask-to-nestjs")
-    num_partitions = environ.get("KAFKA_PARTITIONS", 3)
+    num_partitions = int(environ.get("KAFKA_PARTITIONS", 3))
     print(f"Producing to topic {topic} with {num_partitions} partitions)")
 
     for job in jobs:
 
+        # Generate a UUID for the key
+        job["id"] = str(uuid.uuid4())
         # Convert data to JSON format
         message_value = json.dumps(job)
 
         # Use the UUID as the key for partitioning
-        partition = mmh3.hash(job.id) % num_partitions
-
+        partition = mmh3.hash(job["id"]) % num_partitions
         # Send message with key (UUID for partitioning)
         producer.produce(
             topic,
-            key=job.id,
+            key=job["id"],
             value=message_value,
-            partition=partition,
+            # partition=partition,
             callback=delivery_callback,
         )
 
