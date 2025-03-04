@@ -1,22 +1,22 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/stock-alert/src",
+  "sourceRoot": "apps/alert-service/src",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/stock-alert/tsconfig.app.json"
+    "tsConfigPath": "apps/alert-service/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/stock-alert",
+  "root": "apps/alert-service",
   "projects": {
-    "stock-alert": {
+    "alert-service": {
       "type": "application",
-      "root": "apps/stock-alert",
+      "root": "apps/alert-service",
       "entryFile": "main",
-      "sourceRoot": "apps/stock-alert/src",
+      "sourceRoot": "apps/alert-service/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/stock-alert/tsconfig.app.json"
+        "tsConfigPath": "apps/alert-service/tsconfig.app.json"
       }
     },
     "api-gateway": {
