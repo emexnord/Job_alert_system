@@ -37,7 +37,7 @@ def stream_jobs_data(jobs: List[JobPosting]):
     # failed delivery (after retries).
 
     # Produce data by selecting random values from these lists.
-    topic = environ.get("jobs_stream", "flask-to-nestjs")
+    topic = environ.get("KAFKA_TOPIC", "kafka-job-alert")
     num_partitions = int(environ.get("KAFKA_PARTITIONS", 3))
     print(f"Producing to topic {topic} with {num_partitions} partitions)")
 
