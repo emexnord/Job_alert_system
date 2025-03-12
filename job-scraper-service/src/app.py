@@ -14,13 +14,21 @@ def create_app():
     db.init_app(app)  # Initialize database
     with app.app_context():
         # db.drop_all()
-        db.create_all()
+        # db.create_all()
+        # cronjob.scrape_all()
+        pass
+
+    @app.cli.command("run-cronjob")
+    def run_cronjob():
+        """Manually trigger the cronjob."""
+        print("Executing cronjob...")
+        cronjob.scrape_all()
+        print("Cronjob executed successfully.")
 
     @app.route("/company", methods=["GET"])
     def get_companies():
         try:
             companies = company_service.get_all_companies()
-            cronjob.scrape_all()
             return make_response(jsonify(companies), 200)
         except Exception as e:
             return make_response(jsonify({"message": str(e)}), 500)

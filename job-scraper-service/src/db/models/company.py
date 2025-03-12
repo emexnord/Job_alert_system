@@ -2,6 +2,7 @@ from db.database import db
 from datetime import datetime
 import uuid
 
+
 class Company(db.Model):
     __tablename__ = "companies"
 
@@ -10,7 +11,6 @@ class Company(db.Model):
     scraping_class_name = db.Column(db.String(120), nullable=False, unique=True)
     scraping_url = db.Column(db.String(), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now())
-
 
     def json(self):
         return {

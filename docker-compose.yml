@@ -1,22 +1,22 @@
 services:
-  flask_app:
-    container_name: flask_app
-    image: dockerhub-flask_live_app:1.0.0
-    build: ./job-scraper-service
-    profiles: [ "scraper" ]
-    ports:
-      - "5000:5000"
-    environment:
-      - DB_URL=postgresql://postgres:postgres@flask_db:5432/jobs_db
-      - KAFKA_URL=kafka1:9092
-      - KAFKA_TOPIC=jobs_stream
-      - KAFKA_PARTITIONS=3
+  # flask_app:
+  #   container_name: flask_app
+  #   image: dockerhub-flask_live_app:1.0.0
+  #   build: ./job-scraper-service
+  #   profiles: [ "scraper" ]
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - DB_URL=postgresql://postgres:postgres@flask_db:5432/jobs_db
+  #     - KAFKA_URL=kafka1:9092
+  #     - KAFKA_TOPIC=kafka-job-stream
+  #     - KAFKA_PARTITIONS=3
 
-    depends_on:
-      flask_db:
-        condition: service_healthy
-      kafka1:
-        condition: service_healthy
+  #   depends_on:
+  #     flask_db:
+  #       condition: service_healthy
+  #     kafka1:
+  #       condition: service_healthy
 
   flask_db:
     container_name: flask_db
