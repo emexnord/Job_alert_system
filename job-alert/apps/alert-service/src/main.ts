@@ -25,7 +25,10 @@ async function bootstrap() {
     },
   });
 
+  console.log('Kafka microservice starting...');
   await app.startAllMicroservices();
+  console.log('Kafka microservice started successfully.');
+
   await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();
